@@ -126,6 +126,11 @@ function createBoard() {
                 if (!playing) {
                     return
                 }
+
+                if (square.classList.contains('flagged')) {
+                    return
+                }
+
                 if (square.classList.contains('mine')) {
                     playing = false
                     square.style.backgroundColor = square.getAttribute("mine-color")
