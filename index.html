@@ -1,23 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Minesweeper</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
     <div id="window">
 
-        <div id="grid"></div>
-        <div id="info">
-            <div></div>
-            <p>x0</p>
+        <div id="entering">
+            <p>Enter details</p>
+            <div id="detailControls">
+                <div class="label">
+                    <label for="widthInput">Grid Width</label>
+                    <input type="number" min="5" max="40" id="widthInput" value="15" placeholder="5-40">
+                </div>
+
+                <div class="label">
+                    <label for="heightInput">Grid Heigh</label>
+                    <input type="number" min="5" max="40" id="heightInput" value="15" placeholder="5-40">
+                </div>
+
+                <div class="label">
+                    <label for="minesInput">Mines</label>
+                    <input type="number" min="1" id="minesInput" value="40" placeholder="1+">
+                </div>
+            </div>
+            <button id="continue">Play</button>
+        </div>
+
+        <div id="playing">
+            <div id="grid"></div>
+            <div id="info">
+                <div></div>
+                <p>x0</p>
+            </div>
         </div>
 
     </div>
 
     <script src="script.js"></script>
 </body>
+
 </html>

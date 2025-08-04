@@ -1,4 +1,4 @@
-const setUp = {
+let setUp = {
     "width": 15,
     "height": 15,
     "mines": 40
@@ -6,12 +6,11 @@ const setUp = {
 document.documentElement.style.setProperty('--width', setUp.width);
 document.documentElement.style.setProperty('--height', setUp.height);
 
+let flagged;
+let flaggedSquares = []
+
 const grid = document.getElementById('grid')
 const info = document.querySelector("#info p")
-
-let flagged = setUp.mines
-info.textContent = "x" + flagged
-let flaggedSquares = []
 
 const colors = {
     "green": ["AAD751", "A2D149", "9AC940"],
@@ -35,6 +34,72 @@ let borderLocations;
 let mineLocations = [];
 
 let playing = true;
+
+const enteringDiv = document.querySelector("#entering")
+const playingDiv = document.querySelector("#playing")
+const enterButton = document.querySelector("#continue")
+
+enteringDiv.style.display = "flex"
+
+enterButton.addEventListener("click", function () {
+
+    let checkData = {
+        "width": 5,
+        "height": 5,
+        "mines": 1
+    }
+
+    enteringDiv.querySelectorAll("input").forEach(input => {
+        let numValue = Number(input.value)
+        switch (input.getAttribute("id")) {
+            case ("widthInput"):
+                checkData.width = numValue > 4 && numValue < 41 ? numValue : "ERROR";
+                break;
+            case ("heightInput"):
+                checkData.height = numValue > 4 && numValue < 41 ? numValue : "ERROR";
+                break;
+            case ("minesInput"):
+                checkData.mines = numValue > 1 ? numValue : "ERROR";
+                break;
+
+        }
+    })
+
+    let canContinue = true
+    Object.entries(checkData).forEach(entry => {
+        if (entry[1] === "ERROR") {
+            canContinue = false
+        }
+    })
+
+    if (canContinue) {
+
+        enteringDiv.style.display = "none"
+        playingDiv.style.display = "flex"
+
+        setUp = checkData
+
+        document.documentElement.style.setProperty('--width', setUp.width);
+        document.documentElement.style.setProperty('--height', setUp.height);
+
+        flagged = setUp.mines
+        info.textContent = "x" + flagged
+        flaggedSquares = []
+
+        createBoard()
+        createMines()
+        placeMines()
+        analyse()
+
+        clusterLocations = []
+        findAllClusters().forEach(cluster => cluster.forEach(square => clusterLocations.push(square)));
+
+        clusterBorder()
+    } else {
+        console.error("fail")
+    }
+
+})
 
 document.addEventListener("contextmenu", function (e) {
     e.preventDefault();
@@ -320,13 +385,3 @@ function clusterBorder() {
     }
 }
 
-
-createBoard()
-createMines()
-placeMines()
-analyse()
-
-clusterLocations = []
-findAllClusters().forEach(cluster => cluster.forEach(square => clusterLocations.push(square)));
-
-clusterBorder()
