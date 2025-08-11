@@ -41,6 +41,24 @@ const enterButton = document.querySelector("#continue")
 
 enteringDiv.style.display = "flex"
 
+let storageInfo = JSON.parse(localStorage.getItem("minesweeperData"))
+if (storageInfo !== null) {
+    enteringDiv.querySelectorAll("input").forEach(input => {
+        switch (input.getAttribute("id")) {
+            case ("widthInput"):
+                input.value = storageInfo.width
+                break;
+            case ("heightInput"):
+                input.value = storageInfo.height
+                break;
+            case ("minesInput"):
+                input.value = storageInfo.mines
+                break;
+
+        }
+    })
+}
+
 enterButton.addEventListener("click", function () {
 
     let checkData = {
@@ -74,6 +92,8 @@ enterButton.addEventListener("click", function () {
 
     if (canContinue) {
 
+        localStorage.setItem("minesweeperData", JSON.stringify(checkData))
+
         enteringDiv.style.display = "none"
         playingDiv.style.display = "flex"
 
@@ -92,14 +112,24 @@ enterButton.addEventListener("click", function () {
         analyse()
 
         clusterLocations = []
-        findAllClusters().forEach(cluster => cluster.forEach(square => clusterLocations.push(square)));
+        findAllClusters().forEach(cluster => cluster.forEach(square => clusterLocations.push(square)))
 
         clusterBorder()
+
+
+        function calculateCellSize(cols, rows) {
+            const maxSize = 650
+            const scale = Math.min(maxSize / cols, maxSize / rows)
+            return Math.floor(scale)
+        }
+        document.documentElement.style.setProperty('--cell', `${calculateCellSize(checkData.width, checkData.height)}px`)
+
     } else {
         console.error("fail")
     }
 
 })
+
 
 document.addEventListener("contextmenu", function (e) {
     e.preventDefault();
@@ -229,6 +259,9 @@ function createBoard() {
                         for (let i = 0; i < all.length; i++) {
                             setTimeout(() => {
                                 all[i].classList.add('revealed')
+                                if (all[i].classList.contains("flagged")) {
+                                    all[i].classList.remove('flagged')
+                                }
                                 all[i].querySelector('.text').style.display = 'block'
                                 all[i].style.backgroundColor = '#' + colors.brown[Math.floor(Math.random() * colors.brown.length)]
                             }, i * 10)

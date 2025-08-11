@@ -1,7 +1,7 @@
 :root {
     --width: 9;
     --height: 9;
-    --square: 50px;
+    --cell: 50px;
 }
 
 body {
@@ -35,8 +35,8 @@ body {
 
 #grid {
     display: grid;
-    grid-template-columns: repeat(var(--width), 50px);
-    grid-template-rows: repeat(var(--height), 50px);
+    grid-template-columns: repeat(var(--width), var(--cell));
+    grid-template-rows: repeat(var(--height), var(--cell));
     overflow: hidden;
     border-radius: 15px;
     transition: transform 0.2s ease;
@@ -88,7 +88,7 @@ body {
     align-items: center;
     justify-content: center;
     font-family: outfit;
-    font-size: 25px;
+    font-size: calc(var(--cell) / 1.65);
     overflow: hidden;
     box-sizing: border-box;
 }
